@@ -1,0 +1,6 @@
+[submodule "DgLib"]
+	path = DgLib
+	url = https://github.com/int-Frank/DgLib.git
+[submodule "cppunitlite"]
+	path = cppunitlite
+	url = https://github.com/int-Frank/cppunitlite.git
