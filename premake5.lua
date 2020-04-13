@@ -1,4 +1,4 @@
-workspace "DgLib-tests"
+workspace "DgLib-unit-tests"
   location ""
   architecture "x64"
   
@@ -10,8 +10,8 @@ workspace "DgLib-tests"
     "Release"
   }
   
-projOutput = "%{wks.location}/build/%{prj.name}-%{cfg.buildcfg}"
-projOutputInt = "%{wks.location}/build/intermediate/%{prj.name}-%{cfg.buildcfg}"
+projOutput = "%{wks.location}/build/%{prj.name}/%{cfg.buildcfg}"
+projOutputInt = "%{wks.location}/build/intermediate/%{prj.name}/%{cfg.buildcfg}"
 
 project "Tests"
   location "Tests"
@@ -29,8 +29,8 @@ project "Tests"
 
   includedirs
   {
-    "%{wks.location}/DgLib-tests/DgLib/DgLib/src",
-    "%{wks.location}/DgLib-tests/cppunitlite/cppunitlite"
+    "%{wks.location}/DgLib/src",
+    "%{wks.location}/cppunitlite"
   }
   
   links
@@ -52,6 +52,8 @@ project "DgLib"
   {
     "DgLib/src/**.h",
     "DgLib/src/**.cpp",
+    "DgLib/src/impl/**.h",
+    "DgLib/src/impl/**.cpp",
   }
   
   include "./DgLib_vpaths.lua"
@@ -62,5 +64,11 @@ project "cppunitlite"
   targetdir (projOutput)
   objdir (projOutputInt)
   systemversion "latest"
+  language "C++"
+  cppdialect "C++17"
   
-  include "cppunitlite/premake5_cppunitlite.lua"
+  files 
+  {
+    "cppunitlite/**.h",
+    "cppunitlite/**.cpp",
+  }
