@@ -4,3 +4,6 @@
 [submodule "cppunitlite"]
 	path = cppunitlite
 	url = https://github.com/int-Frank/cppunitlite.git
+[submodule "BuildScripts"]
+	path = BuildScripts
+	url = https://github.com/int-Frank/BuildScripts.git
