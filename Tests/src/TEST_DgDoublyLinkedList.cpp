@@ -224,3 +224,33 @@ TEST(Stack_DgDoublyLinkedList, creation_DgDoublyLinkedList)
   newlst3 = dglst;
   CHECK(CheckState(lst, newlst3));
 }
+
+TEST(Stack_DgDoublyLinkedList_sort, creation_DgDoublyLinkedList_sort)
+{
+  DgList list;
+  list.push_back(6);
+  list.push_back(8);
+  list.push_back(3);
+  list.push_back(9);
+  list.push_back(4);
+  list.push_back(0);
+  list.push_back(5);
+  list.push_back(7);
+  list.push_back(2);
+  list.push_back(1);
+
+  list.sort();
+
+  DgList::iterator it = list.begin();
+  CHECK(*it == 0);
+  it++; CHECK(*it == 1);
+  it++; CHECK(*it == 2);
+  it++; CHECK(*it == 3);
+  it++; CHECK(*it == 4);
+  it++; CHECK(*it == 5);
+  it++; CHECK(*it == 6);
+  it++; CHECK(*it == 7);
+  it++; CHECK(*it == 8);
+  it++; CHECK(*it == 9);
+  it++; CHECK(it == list.end());
+}
