@@ -442,3 +442,30 @@ TEST(Stack_Matrix44_Rotation, creation_Matrix44_Rotation)
   CHECK(q0.Rotate(v) == v * m0);
 
 }
+
+// This serves as a matrix transform example.
+// Here we take an object from object space to world space
+TEST(Stack_Matrix44_Rotation, creation_Matrix44_Transforms)
+{
+  vec3 p0(1.0f, 1.0f, 0.0f, 1.0f);
+  vec3 p1(-1.0f, 1.0f, 0.0f, 1.0f);
+  vec3 p2(-1.0f, -1.0f, 0.0f, 1.0f);
+  vec3 p3(1.0f, -1.0f, 0.0f, 1.0f);
+
+  mat44 r, t, s, T_Object_World;
+  r.RotationX(Dg::Constants<float>::PI / 2.0f);
+  t.Translation(vec3(4.0, 4.0, 4.0, 0.0));
+  s.Scaling(vec3(3.0, 2.0, 1.0, 0.0));
+
+  T_Object_World = s * r * t;
+
+  vec3 p0w = p0 * T_Object_World;
+  vec3 p1w = p1 * T_Object_World;
+  vec3 p2w = p2 * T_Object_World;
+  vec3 p3w = p3 * T_Object_World;
+
+  CHECK(p0w == vec3(7.0, 4.0, 6.0, 1.0));
+  CHECK(p1w == vec3(1.0, 4.0, 6.0, 1.0));
+  CHECK(p2w == vec3(1.0, 4.0, 2.0, 1.0));
+  CHECK(p3w == vec3(7.0, 4.0, 2.0, 1.0));
+}
