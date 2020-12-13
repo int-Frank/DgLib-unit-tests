@@ -13,7 +13,7 @@ struct MyItem
   int pos[2];
 };
 
-typedef Dg::BinPkr_ItemID ID;
+typedef Dg::BinPackerCommon::ItemID ID;
 typedef Dg::BinPacker<int> BPkr;
 typedef std::map<ID, MyItem> MyMap;
 
@@ -93,7 +93,7 @@ TEST(Stack_DgRectanglePacker, creation_DgRectanglePacker)
       item.dim[Dg::Element::height] = rng.GetUintRange(itemMin, itemMax);
 
       ID id = rp.RegisterItem(item.dim[Dg::Element::width], item.dim[Dg::Element::height]);
-      CHECK(Dg::BinPkr_GetError(id) == Dg::BinPkrError::None);
+      CHECK(Dg::BinPackerCommon::GetError(id) == Dg::BinPackerCommon::Error::None);
       itemMap.insert(std::pair<ID, MyItem>(id, item));
     }
 
