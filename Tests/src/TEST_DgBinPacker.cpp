@@ -13,8 +13,8 @@ struct MyItem
   int pos[2];
 };
 
-typedef Dg::BinPackerCommon::ItemID ID;
-typedef Dg::BinPacker<int> BPkr;
+typedef int ID;
+typedef Dg::BinPacker<int, ID> BPkr;
 typedef std::map<ID, MyItem> MyMap;
 
 bool IsContainedIn(MyItem const & a_item, int a_binW, int a_binH)
@@ -86,15 +86,14 @@ TEST(Stack_DgRectanglePacker, creation_DgRectanglePacker)
     BPkr rp;
     MyMap itemMap;
 
-    for (int i = 0; i < nItems; i++)
+    for (ID i = 0; i < nItems; i++)
     {
       MyItem item;
       item.dim[Dg::Element::width] = rng.GetUintRange(itemMin, itemMax);
       item.dim[Dg::Element::height] = rng.GetUintRange(itemMin, itemMax);
 
-      ID id = rp.RegisterItem(item.dim[Dg::Element::width], item.dim[Dg::Element::height]);
-      CHECK(Dg::BinPackerCommon::GetError(id) == Dg::BinPackerCommon::Error::None);
-      itemMap.insert(std::pair<ID, MyItem>(id, item));
+      CHECK(rp.RegisterItem(i, item.dim[Dg::Element::width], item.dim[Dg::Element::height]) == Dg::ErrorCode::None);
+      itemMap.insert(std::pair<ID, MyItem>(i, item));
     }
 
     size_t remainder = 0;
