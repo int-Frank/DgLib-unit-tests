@@ -335,3 +335,26 @@ TEST(Stack_dg_AVLTreeSet, creation_dg_AVLTreeSet)
   set.clear();
   CHECK(set.empty());
 }
+
+TEST(Stack_dg_AVLTreeSet, lower_bound_dg_AVLTreeSet)
+{
+  Dg::Set_AVL<double> set;
+
+  for (int i = 0; i < 100; ++i)
+    set.insert(double(i));
+
+  CHECK(set.lower_bound(-1.0) != set.end());
+  CHECK(*set.lower_bound(-1.0) == 0.0);
+
+  CHECK(set.lower_bound(99.0) != set.end());
+  CHECK(*set.lower_bound(99.0) == 99.0);
+
+  CHECK(set.lower_bound(99.5) == set.end());
+
+  for (int i = 0; i < 99; ++i)
+  {
+    CHECK(set.lower_bound(double(i) + 0.5) != set.end());
+    CHECK(*set.lower_bound(double(i)) == double(i));
+    CHECK(*set.lower_bound(double(i) + 0.5) == double(i + 1));
+  }
+}
