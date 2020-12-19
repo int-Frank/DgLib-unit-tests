@@ -19,20 +19,20 @@ typedef std::map<ID, MyItem> MyMap;
 
 bool IsContainedIn(MyItem const & a_item, int a_binW, int a_binH)
 {
-  bool Wgood = a_item.pos[Dg::Element::x] + a_item.dim[Dg::Element::width] <= a_binW;
-  bool Hgood = a_item.pos[Dg::Element::y] + a_item.dim[Dg::Element::height] <= a_binH;
-  Wgood = Wgood && a_item.pos[Dg::Element::x] >= 0;
-  Hgood = Hgood && a_item.pos[Dg::Element::y] >= 0;
+  bool Wgood = a_item.pos[0] + a_item.dim[0] <= a_binW;
+  bool Hgood = a_item.pos[1] + a_item.dim[1] <= a_binH;
+  Wgood = Wgood && a_item.pos[0] >= 0;
+  Hgood = Hgood && a_item.pos[1] >= 0;
   return Wgood &&  Hgood;
 }
 
 bool Intersects(MyItem const & a_A, MyItem const & a_B)
 {
   bool noIntersects = true;
-  noIntersects = noIntersects || (a_A.pos[Dg::Element::x] + a_A.dim[Dg::Element::width] <= a_B.pos[Dg::Element::x]);
-  noIntersects = noIntersects || (a_A.pos[Dg::Element::x] >= a_B.pos[Dg::Element::x]+ a_B.dim[Dg::Element::width]);
-  noIntersects = noIntersects || (a_A.pos[Dg::Element::y] + a_A.dim[Dg::Element::height] <= a_B.pos[Dg::Element::y]);
-  noIntersects = noIntersects || (a_A.pos[Dg::Element::y] >= a_B.pos[Dg::Element::y] + a_B.dim[Dg::Element::height]);
+  noIntersects = noIntersects || (a_A.pos[0] + a_A.dim[0] <= a_B.pos[0]);
+  noIntersects = noIntersects || (a_A.pos[0] >= a_B.pos[0]+ a_B.dim[0]);
+  noIntersects = noIntersects || (a_A.pos[1] + a_A.dim[1] <= a_B.pos[1]);
+  noIntersects = noIntersects || (a_A.pos[1] >= a_B.pos[1] + a_B.dim[1]);
   return !noIntersects;
 }
 
@@ -62,84 +62,4 @@ TEST(Stack_DgRectanglePacker_Construct, creation_DgRectanglePacker_Construct)
   BPkr rp_copy(rp);
   BPkr rp_assign = rp;
   BPkr rp_move(BPkr());
-}
-
-TEST(Stack_DgRectanglePacker, creation_DgRectanglePacker)
-{
-  int binMinRange[2] = {256, 512};
-  int binMaxRange[2] = {768, 1024};
-
-  int itemMin = 32;
-  int itemMax = 64;
-
-  int nItems = 256;
-  int nTrials = 3;
-
-  printf("\nRECTANGLE PACKER\n");
-
-  for (int t = 0; t < nTrials; t++)
-  {
-    printf("\nTrial %i\n", t);
-    Dg::RNG_Local rng;
-    rng.SetSeed(t + 13);
-
-    BPkr rp;
-    MyMap itemMap;
-
-    for (ID i = 0; i < nItems; i++)
-    {
-      MyItem item;
-      item.dim[Dg::Element::width] = rng.GetUintRange(itemMin, itemMax);
-      item.dim[Dg::Element::height] = rng.GetUintRange(itemMin, itemMax);
-
-      CHECK(rp.RegisterItem(i, item.dim[Dg::Element::width], item.dim[Dg::Element::height]) == Dg::ErrorCode::None);
-      itemMap.insert(std::pair<ID, MyItem>(i, item));
-    }
-
-    size_t remainder = 0;
-    Dg::DynamicArray<BPkr::Bin> binArray;
-    do
-    {
-      BPkr::Bin bin;
-      bin.dimensions[0] = rng.GetUintRange(binMinRange[0], binMinRange[1]);
-      bin.dimensions[1] = rng.GetUintRange(binMinRange[0], binMinRange[1]);
-      bin.maxDimensions[0] = rng.GetUintRange(binMaxRange[0], binMaxRange[1]);
-      bin.maxDimensions[1] = rng.GetUintRange(binMaxRange[0], binMaxRange[1]);
-
-      remainder = rp.Fill(bin);
-      binArray.push_back(bin);
-    } while (remainder > 0);
-
-    CHECK(binArray.size() > 0);
-
-    int binNumber = 0;
-    for (auto & bin : binArray)
-    {
-      CHECK(bin.dimensions[Dg::Element::width] <= bin.maxDimensions[Dg::Element::width]);
-      CHECK(bin.dimensions[Dg::Element::height] <= bin.maxDimensions[Dg::Element::height]);
-
-      Dg::DynamicArray<MyItem> items;
-      
-      for (auto const & item : bin.items)
-      {
-        ID id = item.id;
-        itemMap.at(id).pos[Dg::Element::x] = item.xy[Dg::Element::x];
-        itemMap.at(id).pos[Dg::Element::y] = item.xy[Dg::Element::y];
-        items.push_back(itemMap.at(id));
-      }
-
-      int itemArea = 0;
-      for (size_t i = 0; i < items.size(); i++)
-      {
-        itemArea += items[i].dim[0] * items[i].dim[1];
-        CHECK(IsContainedIn(items[i], bin.dimensions[Dg::Element::width], bin.dimensions[Dg::Element::height]));
-        CHECK(AvoidsAll(items, i));
-      }
-
-      double binArea = (double)bin.dimensions[0] * bin.dimensions[1];
-      double used = (double(itemArea) / binArea) * 100.0;
-      printf("  Bin %i: %.1f%%\n", binNumber, used);
-      binNumber++;
-    }
-  }
 }
