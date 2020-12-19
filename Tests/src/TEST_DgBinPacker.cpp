@@ -136,7 +136,7 @@ TEST(Stack_DgRectanglePacker, creation_DgRectanglePacker)
         CHECK(AvoidsAll(items, i));
       }
 
-      double binArea = bin.dimensions[0] * bin.dimensions[1];
+      double binArea = (double)bin.dimensions[0] * bin.dimensions[1];
       double used = (double(itemArea) / binArea) * 100.0;
       printf("  Bin %i: %.1f%%\n", binNumber, used);
       binNumber++;
