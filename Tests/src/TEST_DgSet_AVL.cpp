@@ -2,9 +2,6 @@
 #include <set>
 
 #include "TestHarness.h"
-
-#define DEBUG
-#define BRK do{char t(0); std::cin >> t;}while(false)
 #include "DgSet_AVL.h"
 
 //TODO Test operator+/operator-
