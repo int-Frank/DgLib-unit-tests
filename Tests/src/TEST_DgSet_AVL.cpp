@@ -29,6 +29,29 @@ bool AreEqual(Set const & m0, Set const & m1)
   return true;
 }
 
+struct Data
+{
+  int v0;
+  mutable int v1;
+};
+
+bool CustomCompare(Data const & a, Data const & b)
+{
+  return a.v0 < b.v0;
+}
+
+TEST(Stack_dg_AVL, creation_dg_AVLCustom)
+{
+  Dg::Set_AVL<Data, CustomCompare> set;
+  for (int i = 0; i < nItems; i++)
+    set.insert({keys[i], i});
+
+  Dg::Set_AVL<Data, CustomCompare>::iterator it = set.find({7, 0});
+  CHECK(it != set.end());
+  CHECK((*it).v0 == 7);
+  CHECK((*it).v1 == 5);
+}
+
 TEST(Stack_dg_AVLTreeSeIterator1, creation_dg_AVLTreeSetIterator1)
 {
   Set set;

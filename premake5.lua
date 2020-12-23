@@ -47,6 +47,7 @@ project "DgLib"
   systemversion "latest"
   language "C++"
   cppdialect "C++17"
+  flags {"FatalWarnings"}
   
   files 
   {
