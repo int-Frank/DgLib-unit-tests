@@ -1,23 +1,23 @@
 #include "TestHarness.h"
-#include "DgR3Sphere.h"
-#include "DgR3Line.h"
-#include "DgR3QueryLineSphere.h"
+#include "DgHypersphere.h"
+#include "DgLine.h"
+#include "DgQueryLineHypersphere.h"
 
 typedef double                  Real;
-typedef Dg::R3::Vector<Real>       vec;
-typedef Dg::R3::Line<Real>          line;
-typedef Dg::R3::Sphere<Real>        sphere;
+typedef Dg::Vector3<Real>       vec3;
+typedef Dg::Line3<Real>          line;
+typedef Dg::Sphere<Real>        sphere;
 
 TEST(Stack_DgSphere, DgSphere)
 {
-  vec center(2.0, 6.0, 9.0, 1.0);
+  vec3 center(2.0, 6.0, 9.0);
   Real radius = 4.0;
 
   sphere s = sphere(center, radius);
   CHECK(s.Center() == center);
   CHECK(s.Radius() == radius);
 
-  vec c;
+  vec3 c;
   Real r(0.0);
   s.Get(c, r);
   CHECK(c == center);

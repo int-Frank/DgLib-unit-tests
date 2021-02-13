@@ -1,7 +1,8 @@
 #include "TestHarness.h"
-#include "DgR2Vector.h"
+#include "DgVector.h"
 
-typedef Dg::R2::Vector_cartesian < float > vec2;
+using namespace Dg;
+typedef Vector2<float> vec2;
 
 //--------------------------------------------------------------------------------
 //	Vector Construction
@@ -14,31 +15,31 @@ TEST(Stack_Vector2catesian_Construction, creation_Vector2catesian_Construction)
   CHECK(v1 == v0);
   CHECK(!(v1 != v0));
   CHECK(!v0.IsZero());
-  CHECK(!v0.IsUnit());
+  CHECK(!IsUnit(v0));
 
   vec2 p1;
-  p1.Set(2.0f, -8.12f);
+  p1 = vec2(2.0f, -8.12f);
   p1.Clean();
   v0.Zero();
   v0 = v1;
-  v0.Normalize();
+  v0 = Normalize(v0);
 
-  CHECK(v0.IsUnit());
+  CHECK(IsUnit(v0));
 
   //Statics
-  vec2 vec = vec2::Origin();
+  vec2 vec = Zeros2f();
   CHECK(vec[0] == 0.0f);
   CHECK(vec[1] == 0.0f);
 
-  vec = vec2::ZeroVector();
+  vec = Zeros2f();
   CHECK(vec[0] == 0.0f);
   CHECK(vec[1] == 0.0f);
 
-  vec = vec2::xAxis();
+  vec = xAxis2f();
   CHECK(vec[0] == 1.0f);
   CHECK(vec[1] == 0.0f);
 
-  vec = vec2::yAxis();
+  vec = yAxis2f();
   CHECK(vec[0] == 0.0f);
   CHECK(vec[1] == 1.0f);
 }
@@ -89,26 +90,25 @@ TEST(Stack_Vector2catesian_Other, creation_Vector2catesian_Other)
 {
   // Dot ///////////////////////////////////////////////
 
-  float r_Dot = vec2(2.0f, 0.0f).Dot(vec2(0.0f, 3.2f));
+  float r_Dot = Dot(vec2(2.0f, 0.0f), vec2(0.0f, 3.2f));
   CHECK(r_Dot == 0.0f);
 
   // Cross /////////////////////////////////////////////
 
   vec2 c0(1.0f, 1.0f);
-  c0.Normalize();
-  vec2 c1(c0.Perpendicular());
+  c0 = Normalize(c0);
+  vec2 c1(Perpendicular(c0));
 
-  float c2 = c0.PerpDot(c1);
+  float c2 = PerpDot(c0, c1);
 
-  CHECK(Dg::IsZero(Dot(c0, c1)) &&
-    Dg::IsZero(1.0f - c2));
+  CHECK(Dg::IsZero(Dot(c0, c1)) && Dg::IsZero(1.0f - c2));
 
   // Length ///////////////////////////////////////////
 
   vec2 v(3.0f, 4.0f);
 
-  float length = v.Length();
-  float lengthSquared = v.LengthSquared();
+  float length = Mag(v);
+  float lengthSquared = MagSq(v);
 
   CHECK(length == 5.0f);
   CHECK(lengthSquared == 25.0f);

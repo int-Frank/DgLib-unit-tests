@@ -1,22 +1,22 @@
 #include "TestHarness.h"
-#include "DgR2AABB.h"
-#include "DgR2Vector.h"
-#include "DgR2QueryPointAABB.h"
+#include "DgAABB.h"
+#include "DgVector.h"
+#include "DgQueryPointAABB.h"
 
-typedef Dg::R2::Vector<float>     vec;
-typedef Dg::R2::AABB<float>       AABB;
+typedef Dg::Vector2<float>     vec2;
+typedef Dg::AABB2<float>       AABB2;
 
 TEST(Stack_DgR2AABB, DgR2AABB)
 {
-  AABB aabb(vec(-1.0f, -1.0f, 1.0f), vec(1.0f, 1.0f, 1.0f));
+  AABB2 aabb(vec2(-1.0f, -1.0f), vec2(1.0f, 1.0f));
 
-  Dg::R2::TIPointAABB<float> query;
-  CHECK(query(vec(0.0f, 0.0f, 1.0f), aabb).isIntersecting == true);
-  CHECK(query(vec(0.9f, 0.9f, 1.0f), aabb).isIntersecting == true);
-  CHECK(query(vec(-0.9f, -0.9f, 1.0f), aabb).isIntersecting == true);
+  Dg::TI2PointAABB<float> query;
+  CHECK(query(vec2(0.0f, 0.0f), aabb).isIntersecting == true);
+  CHECK(query(vec2(0.9f, 0.9f), aabb).isIntersecting == true);
+  CHECK(query(vec2(-0.9f, -0.9f), aabb).isIntersecting == true);
 
-  CHECK(query(vec(1.1f, 0.0f, 1.0f), aabb).isIntersecting  == false);
-  CHECK(query(vec(0.0f, 1.1f, 1.0f), aabb).isIntersecting  == false);
-  CHECK(query(vec(-2.0f, 0.0f, 1.0f), aabb).isIntersecting == false);
-  CHECK(query(vec(0.0f, -2.0f, 1.0f), aabb).isIntersecting == false);
+  CHECK(query(vec2(1.1f, 0.0f), aabb).isIntersecting  == false);
+  CHECK(query(vec2(0.0f, 1.1f), aabb).isIntersecting  == false);
+  CHECK(query(vec2(-2.0f, 0.0f), aabb).isIntersecting == false);
+  CHECK(query(vec2(0.0f, -2.0f), aabb).isIntersecting == false);
 }

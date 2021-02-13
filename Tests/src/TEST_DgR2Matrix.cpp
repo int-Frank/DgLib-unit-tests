@@ -1,9 +1,11 @@
 #include "TestHarness.h"
-#include "DgR2Matrix.h"
-#include "DgR2Vector.h"
+#include "DgMatrix33.h"
+#include "DgVector.h"
+#include "DgVector.h"
 
-typedef Dg::R2::Matrix< float >     mat33;
-typedef Dg::R2::Vector<float>        vec3;
+typedef Dg::Matrix33<float>   mat33;
+typedef Dg::Vector2<float> vec2;
+typedef Dg::Vector3<float> vec3;
 
 //--------------------------------------------------------------------------------
 //	Matrix Construction
@@ -66,9 +68,9 @@ TEST(Stack_Matrix33_Construction, creation_Matrix33_Construction)
 TEST(Stack_Matrix33_Inverse, creation_Matrix33_Inverse)
 {
   mat33 m0, m1, m2, ms, mr, mt;
-  ms.Scaling(vec3(1.34f, 0.39f, 0.0f));
+  ms.Scaling(vec2(1.34f, 0.39f));
   mr.Rotation(0.234f);
-  mt.Translation(vec3( 2.3f, 53.24f, 0.0f ));
+  mt.Translation(vec2( 2.3f, 53.24f));
 
   m0 = mt;
   m1 = m0.GetInverse();
@@ -99,10 +101,10 @@ TEST(Stack_Matrix33_Inverse, creation_Matrix33_Inverse)
 TEST(Stack_Matrix33_VectorTransform, creation_Matrix33_VectorTransform)
 {
   {
-    vec3 t0(0.5f, 0.5f, 0.0f);
-    vec3 s0(0.5f, 0.5f, 0.0f);
-    vec3 t1(0.4f, 0.4f, 0.0f); //0.2, 0.4
-    vec3 s1(0.2f, 0.2f, 0.0f);
+    vec2 t0(0.5f, 0.5f);
+    vec2 s0(0.5f, 0.5f);
+    vec2 t1(0.4f, 0.4f); //0.2, 0.4
+    vec2 s1(0.2f, 0.2f);
 
     mat33 mt0, mt1;
 
@@ -136,7 +138,7 @@ TEST(Stack_Matrix33_VectorTransform, creation_Matrix33_VectorTransform)
 
   ms.Scaling(2.0f);
   mr.Rotation(Dg::Constants<float>::PI / 2.0f);
-  mt.Translation(vec3( 1.0f, 1.0f, 0.0f ));
+  mt.Translation(vec2( 1.0f, 1.0f ));
 
   vec3 pin(2.0f, 3.0f, 1.0f);
   vec3 pout(-7.0f, 5.0f, 1.0f);

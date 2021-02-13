@@ -1,53 +1,50 @@
 #include "TestHarness.h"
-#include "DgR2ConvexHull.h"
+#include "DgConvexHull.h"
 #include "DgDynamicArray.h"
+
+typedef Dg::Vector2<float> vec2;
+typedef Dg::DynamicArray<vec2> Container;
 
 TEST(Stack_DgR2ConvexHull, creation_DgR2ConvexHull)
 {
-  typedef Dg::R2::Vector<float> vec;
-  typedef Dg::DynamicArray<vec> Container;
-
-  vec points[] ={vec(0.0f, 3.0f, 1.0f),
-                 vec(1.0f, 1.0f, 1.0f),
-                 vec(2.0f, 2.0f, 1.0f),
-                 vec(4.0f, 4.0f, 1.0f),
-                 vec(0.0f, 0.0f, 1.0f),
-                 vec(1.0f, 2.0f, 1.0f),
-                 vec(3.0f, 1.0f, 1.0f),
-                 vec(3.0f, 3.0f, 1.0f)};
+  vec2 points[] ={vec2(0.0f, 3.0f),
+                 vec2(1.0f, 1.0f),
+                 vec2(2.0f, 2.0f),
+                 vec2(4.0f, 4.0f),
+                 vec2(0.0f, 0.0f),
+                 vec2(1.0f, 2.0f),
+                 vec2(3.0f, 1.0f),
+                 vec2(3.0f, 3.0f)};
   size_t nItems = sizeof(points) / sizeof(points[0]);
   Container result;
-  Dg::R2::ConvexHull<float, Container>(points, nItems, result);
+  Dg::ConvexHull2<float, Container>(points, nItems, result);
 
   CHECK(result.size() == 4);
 
-  CHECK(result[0] == vec(0.0f, 0.0f, 1.0f));
-  CHECK(result[1] == vec(3.0f, 1.0f, 1.0f));
-  CHECK(result[2] == vec(4.0f, 4.0f, 1.0f));
-  CHECK(result[3] == vec(0.0f, 3.0f, 1.0f));
+  CHECK(result[0] == vec2(0.0f, 0.0f));
+  CHECK(result[1] == vec2(3.0f, 1.0f));
+  CHECK(result[2] == vec2(4.0f, 4.0f));
+  CHECK(result[3] == vec2(0.0f, 3.0f));
 }
 
 TEST(Stack_DgR2ConvexHull_Mutable, creation_DgR2ConvexHull_Mutable)
 {
-  typedef Dg::R2::Vector<float> vec;
-  typedef Dg::DynamicArray<vec> Container;
-
-  vec points[] ={vec(0.0f, 3.0f, 1.0f),
-                 vec(1.0f, 1.0f, 1.0f),
-                 vec(2.0f, 2.0f, 1.0f),
-                 vec(4.0f, 4.0f, 1.0f),
-                 vec(0.0f, 0.0f, 1.0f),
-                 vec(1.0f, 2.0f, 1.0f),
-                 vec(3.0f, 1.0f, 1.0f),
-                 vec(3.0f, 3.0f, 1.0f)};
+  vec2 points[] ={vec2(0.0f, 3.0f),
+                 vec2(1.0f, 1.0f),
+                 vec2(2.0f, 2.0f),
+                 vec2(4.0f, 4.0f),
+                 vec2(0.0f, 0.0f),
+                 vec2(1.0f, 2.0f),
+                 vec2(3.0f, 1.0f),
+                 vec2(3.0f, 3.0f)};
   size_t nItems = sizeof(points) / sizeof(points[0]);
   Container result;
-  Dg::R2::ConvexHull_Mutable<float, Container>(points, nItems, result);
+  Dg::ConvexHull2_Mutable<float, Container>(points, nItems, result);
 
   CHECK(result.size() == 4);
 
-  CHECK(result[0] == vec(0.0f, 0.0f, 1.0f));
-  CHECK(result[1] == vec(3.0f, 1.0f, 1.0f));
-  CHECK(result[2] == vec(4.0f, 4.0f, 1.0f));
-  CHECK(result[3] == vec(0.0f, 3.0f, 1.0f));
+  CHECK(result[0] == vec2(0.0f, 0.0f));
+  CHECK(result[1] == vec2(3.0f, 1.0f));
+  CHECK(result[2] == vec2(4.0f, 4.0f));
+  CHECK(result[3] == vec2(0.0f, 3.0f));
 }

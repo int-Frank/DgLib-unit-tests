@@ -1,11 +1,12 @@
 #include "TestHarness.h"
-#include "DgR3Vector.h"
-#include "DgR3Quaternion.h"
-#include "DgR3Matrix.h"
+#include "DgVector.h"
+#include "DgQuaternion.h"
+#include "DgMatrix44.h"
 
-typedef Dg::R3::Quaternion < float >  quat;
-typedef Dg::R3::Vector < float >     vec4;
-typedef Dg::R3::Matrix<float>       mat44;
+typedef Dg::Quaternion<float> quat;
+typedef Dg::Vector3<float>     vec3;
+typedef Dg::Matrix<1, 4, float>     vec4;
+typedef Dg::Matrix44<float>     mat44;
 
 //--------------------------------------------------------------------------------
 //	Quaternion Construction
@@ -40,10 +41,10 @@ TEST(Stack_Quaternion_Construction, creation_Quaternion_Construction)
   q0.Zero();
   CHECK(Dg::IsZero(q0.Magnitude()));
 
-  vec4 v1( 1.0f, -1.0f, 1.0f, 0.0f );
-  vec4 v2( -1.0f, -1.0f, 1.0f, 0.0f );
-  v1.Normalize();
-  v2.Normalize();
+  vec3 v1( 1.0f, -1.0f, 1.0f);
+  vec3 v2( -1.0f, -1.0f, 1.0f);
+  v1 = Normalize(v1);
+  v2 = Normalize(v2);
 
   quat q2(v1, Dg::Constants<float>::PI * 0.5f);
   quat q3(v1, v2);
@@ -61,15 +62,15 @@ TEST(Stack_Quaternion_Construction, creation_Quaternion_Construction)
 
   // From-To ///////////////////////////
 
-  v1.Set( 1.0f, 0.0f, 0.0f, 0.0f );
-  v2.Set( 0.0f, 0.0f, 1.0f, 0.0f );
+  v1 = vec3( 1.0f, 0.0f, 0.0f );
+  v2 = vec3( 0.0f, 0.0f, 1.0f );
   q0.Set(v1, v2);
   q1.SetRotationY(-Dg::Constants<float>::PI * 0.5f);
   CHECK(q0 == q1);
 
-  v1.Set( 1.0f, 0.0f, 0.0f, 0.0f );
-  v2.Set( 1.0f, 0.0f, 1.0f, 0.0f );
-  v2.Normalize();
+  v1 = vec3( 1.0f, 0.0f, 0.0f );
+  v2 = vec3( 1.0f, 0.0f, 1.0f );
+  v2 = Normalize(v2);
   q0.Set(v1, v2);
   q1.SetRotationY(-Dg::Constants<float>::PI * 0.25f);
   CHECK(q0 == q1);
@@ -86,7 +87,7 @@ TEST(Stack_Quaternion_Rotation, creation_Quaternion_Rotation)
   float yr = 0.843f;
   float zr = 1.45f;
 
-  vec4 axis;
+  vec3 axis;
   float angle;
 
   qx.SetRotationX(xr);
@@ -103,13 +104,13 @@ TEST(Stack_Quaternion_Rotation, creation_Quaternion_Rotation)
   q4.Set(axis, angle);
   CHECK(q4 == q3);
 
-  q4.Set(vec4( 1.0f, 0.0f, 0.0f, 0.0f ), xr);
+  q4.Set(vec3( 1.0f, 0.0f, 0.0f ), xr);
   CHECK(q4 == qx);
 
-  q4.Set(vec4( 0.0f, 1.0f, 0.0f, 0.0f ), yr);
+  q4.Set(vec3( 0.0f, 1.0f, 0.0f ), yr);
   CHECK(q4 == qy);
 
-  q4.Set(vec4( 0.0f, 0.0f, 1.0f, 0.0f ), zr);
+  q4.Set(vec3( 0.0f, 0.0f, 1.0f ), zr);
   CHECK(q4 == qz);
 
   //Euler angles
@@ -189,43 +190,43 @@ TEST(Stack_Quaternion_Rotation, creation_Quaternion_Rotation)
 TEST(Stack_Quaternion_Conversion, creation_Quaternion_Conversion)
 {
   quat q;
-  vec4 v0, v1, v2;
+  vec3 v0, v1, v2;
 
   q.SetRotationX(Dg::Constants<float>::PI / 2.0f);
   q.GetBasis(v0, v1, v2);
-  CHECK(v0 == vec4( 1.0f, 0.0f, 0.0f, 0.0f ));
-  CHECK(v1 == vec4( 0.0f, 0.0f, 1.0f, 0.0f ));
-  CHECK(v2 == vec4( 0.0f, -1.0f, 0.0f, 0.0f ));
+  CHECK(v0 == vec3( 1.0f, 0.0f, 0.0f ));
+  CHECK(v1 == vec3( 0.0f, 0.0f, 1.0f));
+  CHECK(v2 == vec3( 0.0f, -1.0f, 0.0f ));
 
   q.SetRotationY(Dg::Constants<float>::PI / 2.0f);
   q.GetBasis(v0, v1, v2);
-  CHECK(v0 == vec4( 0.0f, 0.0f, -1.0f, 0.0f ));
-  CHECK(v1 == vec4( 0.0f, 1.0f, 0.0f, 0.0f ));
-  CHECK(v2 == vec4( 1.0f, 0.0f, 0.0f, 0.0f ));
+  CHECK(v0 == vec3( 0.0f, 0.0f, -1.0f ));
+  CHECK(v1 == vec3( 0.0f, 1.0f, 0.0f ));
+  CHECK(v2 == vec3( 1.0f, 0.0f, 0.0f ));
 
   q.SetRotationZ(Dg::Constants<float>::PI / 2.0f);
   q.GetBasis(v0, v1, v2);
-  CHECK(v0 == vec4( 0.0f, 1.0f, 0.0f, 0.0f ));
-  CHECK(v1 == vec4( -1.0f, 0.0f, 0.0f, 0.0f ));
-  CHECK(v2 == vec4( 0.0f, 0.0f, 1.0f, 0.0f ));
+  CHECK(v0 == vec3( 0.0f, 1.0f, 0.0f ));
+  CHECK(v1 == vec3( -1.0f, 0.0f, 0.0f ));
+  CHECK(v2 == vec3( 0.0f, 0.0f, 1.0f ));
 
   q.SetRotationX(-Dg::Constants<float>::PI / 2.0f);
   q.GetBasis(v0, v1, v2);
-  CHECK(v0 == vec4( 1.0f, 0.0f, 0.0f, 0.0f ));
-  CHECK(v1 == vec4( 0.0f, 0.0f, -1.0f, 0.0f ));
-  CHECK(v2 == vec4( 0.0f, 1.0f, 0.0f, 0.0f ));
+  CHECK(v0 == vec3( 1.0f, 0.0f, 0.0f ));
+  CHECK(v1 == vec3( 0.0f, 0.0f, -1.0f ));
+  CHECK(v2 == vec3( 0.0f, 1.0f, 0.0f ));
 
   q.SetRotationY(-Dg::Constants<float>::PI / 2.0f);
   q.GetBasis(v0, v1, v2);
-  CHECK(v0 == vec4( 0.0f, 0.0f, 1.0f, 0.0f ));
-  CHECK(v1 == vec4( 0.0f, 1.0f, 0.0f, 0.0f ));
-  CHECK(v2 == vec4( -1.0f, 0.0f, 0.0f, 0.0f ));
+  CHECK(v0 == vec3( 0.0f, 0.0f, 1.0f ));
+  CHECK(v1 == vec3( 0.0f, 1.0f, 0.0f ));
+  CHECK(v2 == vec3( -1.0f, 0.0f, 0.0f ));
 
   q.SetRotationZ(-Dg::Constants<float>::PI / 2.0f);
   q.GetBasis(v0, v1, v2);
-  CHECK(v0 == vec4( 0.0f, -1.0f, 0.0f, 0.0f ));
-  CHECK(v1 == vec4( 1.0f, 0.0f, 0.0f, 0.0f ));
-  CHECK(v2 == vec4( 0.0f, 0.0f, 1.0f, 0.0f ));
+  CHECK(v0 == vec3( 0.0f, -1.0f, 0.0f ));
+  CHECK(v1 == vec3( 1.0f, 0.0f, 0.0f ));
+  CHECK(v2 == vec3( 0.0f, 0.0f, 1.0f ));
 }
 
 
@@ -246,7 +247,7 @@ TEST(Stack_Quaternion_Operations, creation_Quaternion_Operations)
 
   q3 = q2 * q1 * q0;
 
-  q1 = Dg::R3::Inverse(q3);
+  q1 = Dg::Inverse(q3);
   q1 = q3;
   q1.Inverse();
   q2 = q1 * q3;
@@ -255,7 +256,7 @@ TEST(Stack_Quaternion_Operations, creation_Quaternion_Operations)
 
   q1.Conjugate();
   q2 = q1;
-  q2 = Dg::R3::Conjugate(q1);
+  q2 = Dg::Conjugate(q1);
 
   q1 = q1 + q0;
   q1 = q0 * q1;
@@ -264,25 +265,25 @@ TEST(Stack_Quaternion_Operations, creation_Quaternion_Operations)
   q1 -= q0;
   q1 *= q0;
 
-  float r_dot = Dg::R3::Dot(q1, q0);
+  float r_dot = Dg::Dot(q1, q0);
 
-  vec4 v(1.0f, 0.0f, 0.0f, 0.0f);
-  vec4 v0 = v;
+  vec3 v(1.0f, 0.0f, 0.0f);
+  vec3 v0 = v;
 
   q0.SetRotationX(Dg::Constants<float>::PI * 0.5f);
   q1.SetRotationY(Dg::Constants<float>::PI * 0.5f);
   q2.SetRotationZ(Dg::Constants<float>::PI * 0.5f);
 
   q1.RotateSelf(v);
-  CHECK(v == vec4(0.0f, 0.0f, -1.0f, 0.0f));
+  CHECK(v == vec3(0.0f, 0.0f, -1.0f));
 
   q0.RotateSelf(v);
-  CHECK(v == vec4(0.0f, 1.0f, 0.0f, 0.0f));
+  CHECK(v == vec3(0.0f, 1.0f, 0.0f));
 
   q2.RotateSelf(v);
-  CHECK(v == vec4(-1.0f, 0.0f, 0.0f, 0.0f));
+  CHECK(v == vec3(-1.0f, 0.0f, 0.0f));
 
-  CHECK((q1 * q0 * q2).Rotate(v0) == vec4(-1.0f, 0.0f, 0.0f, 0.0f));
+  CHECK((q1 * q0 * q2).Rotate(v0) == vec3(-1.0f, 0.0f, 0.0f));
 
 }
 
@@ -303,13 +304,13 @@ TEST(Stack_Quaternion_Slerp, creation_Quaternion_Slerp)
 
   q3 = q2 * q1 * q0;
 
-  Dg::R3::Lerp(q2, q0, q1, 1.0f);
+  Dg::Lerp(q2, q0, q1, 1.0f);
   CHECK(q2 == q1);
 
-  Dg::R3::Slerp(q2, q0, q1, 1.0f);
+  Dg::Slerp(q2, q0, q1, 1.0f);
   CHECK(q2 == q1);
 
-  Dg::R3::ApproxSlerp(q2, q0, q1, 1.0f);
+  Dg::ApproxSlerp(q2, q0, q1, 1.0f);
   CHECK(q2 == q1);
 }
 
