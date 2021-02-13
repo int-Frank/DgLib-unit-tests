@@ -22,7 +22,7 @@ TEST(Stack_DgDisk0, DgDisk0)
   Dg::CPA2DiskDisk<float>::Result result = fpcQuery(d0, v0, d1, v1);
 
   CHECK(result.code == Dg::QueryCode::Intersecting);
-  CHECK(result.t = 9.0f);
+  CHECK(result.t == 9.0f);
 }
 
 TEST(Stack_DgDisk2, DgDisk2)
@@ -36,7 +36,7 @@ TEST(Stack_DgDisk2, DgDisk2)
   Dg::CPA2PointDisk<float>::Result result = fpcQuery(p, vp, d, vd);
 
   CHECK(result.code == Dg::QueryCode::Intersecting);
-  CHECK(result.t = 9.5f);
+  CHECK(result.t == 9.5f);
 }
 
 TEST(Stack_DgDisk3, DgDisk3)
@@ -49,5 +49,5 @@ TEST(Stack_DgDisk3, DgDisk3)
   Dg::CPA2LineDisk<float>::Result result = fpcQuery(l, d, vd);
 
   CHECK(result.code == Dg::QueryCode::Intersecting);
-  CHECK(result.t = 9.0f);
+  CHECK(result.t == 9.0f);
 }
