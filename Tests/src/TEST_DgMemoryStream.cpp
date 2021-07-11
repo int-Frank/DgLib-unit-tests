@@ -230,10 +230,10 @@ TEST(Stack_DgMemoryStream_4, creation_DgMemoryStream_4)
 
   ms.SetPosition(2);
   ReturnType result = ms.RemoveBlock(4);
-  CHECK(result.error == Dg::ErrorCode::BadInput);
+  CHECK(result.error == Dg::ErrorCode::InvalidInput);
 
   result = ms.RemoveBlock(-4);
-  CHECK(result.error == Dg::ErrorCode::BadInput);
+  CHECK(result.error == Dg::ErrorCode::InvalidInput);
 
   result = ms.RemoveBlock(3);
   CHECK(result.error == Dg::ErrorCode::None);
