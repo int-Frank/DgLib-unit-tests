@@ -15,10 +15,10 @@ typedef Dg::VQS<double>         VQS;
 //--------------------------------------------------------------------------------
 TEST(Stack_VQS_Construction, creation_VQS_Construction)
 {
-  vec3 v(23.4, -84.2, 0.2134 ), v0;
-  quat q, q0;
+  vec3 v(23.4, -84.2, 0.2134 );
+  quat q;
   q.SetRotation(2.45, 0.8354, -1.345, Dg::EulerOrder::XYX);
-  double s(2.3), s0;
+  double s = 2.3;
 
   VQS vqs0, vqs3;
   VQS vqs1(v, q, s);
@@ -34,41 +34,51 @@ TEST(Stack_VQS_Construction, creation_VQS_Construction)
   vqs2.Set(v, q, s);
   CHECK(vqs2 == vqs1);
 
-  vqs2.SetV(v);
-  vqs2.SetQ(q);
-  vqs2.SetS(s);
+  vqs2.V() = v;
+  vqs2.Q() = q;
+  vqs2.S() = s;
   CHECK(vqs2 == vqs1);
-
-  vqs2.Get(v0, q0, s0);
-  CHECK(v == v0);
-  CHECK(q == q0);
-  CHECK(s == s0);
 
   vqs0.Identity();
   vqs2.Identity();
   vqs3.Identity();
 
-  vqs0.SetV(v);
-  vqs2.SetQ(q);
-  vqs3.SetS(s);
+  vqs0.V() = v;
+  vqs2.Q() = q;
+  vqs3.S() = s;
   CHECK((vqs3 * vqs2 * vqs0) == vqs1);
 
   vqs0.Identity();
   vqs2.Identity();
   vqs3.Identity();
 
-  vqs0.SetV(v);
-  vqs2.SetQ(q);
-  vqs3.SetS(s);
+  vqs0.V() = v;
+  vqs2.Q() = q;
+  vqs3.S() = s;
   vqs3 *= vqs2;
   vqs3 *= vqs0;
   CHECK(vqs3 == vqs1);
-
 }
 
-//--------------------------------------------------------------------------------
-//	VQS VectorTransform
-//--------------------------------------------------------------------------------
+
+TEST(Stack_VQS_Inverse, creation_VQS_Inverse)
+{
+  vec3 v(23.4, -84.2, 0.2134);
+  quat q;
+  q.SetRotation(2.45, 0.8354, -1.345, Dg::EulerOrder::XYX);
+  double s = 2.3;
+  
+  VQS vqs(v, q, s);
+  VQS vqs_inv = vqs.GetInverse();
+
+  VQS result = vqs * vqs_inv;
+  CHECK(result == VQS());
+
+  result = vqs_inv * vqs;
+  CHECK(result == VQS());
+}
+
+
 TEST(Stack_VQS_VectorTransform, creation_VQS_VectorTransform)
 {
   quat q;

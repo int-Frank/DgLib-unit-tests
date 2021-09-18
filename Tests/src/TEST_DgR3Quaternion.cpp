@@ -274,13 +274,13 @@ TEST(Stack_Quaternion_Operations, creation_Quaternion_Operations)
   q1.SetRotationY(Dg::Constants<float>::PI * 0.5f);
   q2.SetRotationZ(Dg::Constants<float>::PI * 0.5f);
 
-  q1.RotateSelf(v);
+  v = q1.Rotate(v);
   CHECK(v == vec3(0.0f, 0.0f, -1.0f));
 
-  q0.RotateSelf(v);
+  v = q0.Rotate(v);
   CHECK(v == vec3(0.0f, 1.0f, 0.0f));
 
-  q2.RotateSelf(v);
+  v = q2.Rotate(v);
   CHECK(v == vec3(-1.0f, 0.0f, 0.0f));
 
   CHECK((q1 * q0 * q2).Rotate(v0) == vec3(-1.0f, 0.0f, 0.0f));
