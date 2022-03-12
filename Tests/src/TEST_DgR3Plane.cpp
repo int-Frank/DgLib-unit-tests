@@ -23,30 +23,21 @@ TEST(Stack_DgPlane, DgPlane)
   plane pl2(p0, p2, p1);
   plane pl3(normal, p1);
 
-
-  CHECK(pl0 == pl1 && pl0 == pl2 && pl0 == pl3);
-
   //Copying and assignment
   plane pl4(pl0);
   plane pl5 = pl0;
-
-  CHECK(pl4 == pl5);
-  CHECK(!(pl4 != pl5));
 
   //Returning internals
   vec3 n0 = pl1.Normal();
   Real o0 = pl1.Offset();
   vec3 n1;
   Real o1(0.0);
-  pl1.Get(n1, o1);
-  CHECK(n0 == n1 && o0 == o1);
 
   //Distances
   vec3 p3(-1.0, 23.5, -90.4);
 
   CHECK(Dg::AreEqual(pl0.SignedDistance(p3), -2.0));
   CHECK(Dg::AreEqual(pl0.Distance(p3), 2.0));
-  CHECK(Dg::IsZero(pl1.NormalDot(vec3(0.0, 12.4, -5.3))));
 
   //Point-Plane query
   Dg::CP3PointPlane<Real>           dcpPointPlane;

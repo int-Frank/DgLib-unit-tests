@@ -17,16 +17,8 @@ TEST(Stack_DgSphere, DgSphere)
   CHECK(s.Center() == center);
   CHECK(s.Radius() == radius);
 
-  vec3 c;
-  Real r(0.0);
-  s.Get(c, r);
-  CHECK(c == center);
-  CHECK(r == radius);
-
   sphere s0 = s;
   sphere s1(s0);
-  CHECK(s1 == s);
-  CHECK(!(s1 != s));
 
   s.SetCenter(center);
   s.SetRadius(radius);
