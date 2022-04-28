@@ -3,6 +3,7 @@
 
 #include "TestHarness.h"
 #include "DgSet_AVL.h"
+#include "DgRNG_Local.h"
 
 //TODO Test operator+/operator-
 typedef Dg::Set_AVL<int> Set;
@@ -376,5 +377,57 @@ TEST(Stack_dg_AVLTreeSet, lower_bound_dg_AVLTreeSet)
     CHECK(set.lower_bound(double(i) + 0.5) != set.end());
     CHECK(*set.lower_bound(double(i)) == double(i));
     CHECK(*set.lower_bound(double(i) + 0.5) == double(i + 1));
+  }
+}
+
+bool AreEqual(std::set<uint32_t> const &std_set, Dg::Set_AVL<uint32_t> const &Dg_set)
+{
+  if (std_set.size() != Dg_set.size())
+    return false;
+
+  auto std_it = std_set.cbegin();
+  auto Dg_it = Dg_set.cbegin();
+  for (size_t i = 0; i < Dg_set.size(); i++, std_it++, Dg_it++)
+  {
+    if (*std_it != *Dg_it)
+      return false;
+  }
+  return true;
+}
+
+TEST(Stack_dg_AVLTreeSet, stress_test_dg_AVLTreeSet)
+{
+  std::set<uint32_t> std_set;
+  Dg::Set_AVL<uint32_t> Dg_set;
+
+  uint32_t const nElements = 1024;
+  uint32_t const nRuns = 32;
+
+  for (uint32_t n = 0; n < nRuns; n++)
+  {
+    std::cout << ".";
+    Dg::RNG_Local rng;
+    rng.SetSeed(n);
+    for (uint32_t i = 0; i < nElements; i++)
+    {
+      uint32_t x = rng.GetUint();
+      std_set.insert(x);
+      Dg_set.insert(x);
+
+      CHECK(AreEqual(std_set, Dg_set));
+    }
+
+    while (Dg_set.size() != 0)
+    {
+      uint32_t index = rng.GetUintRange(0, (uint32_t)Dg_set.size() - 1);
+      auto it = Dg_set.begin();
+      for (uint32_t i = 0; i < index; i++)
+        it++;
+      uint32_t x = *it;
+      std_set.erase(x);
+      Dg_set.erase(x);
+
+      CHECK(AreEqual(std_set, Dg_set));
+    }
   }
 }
