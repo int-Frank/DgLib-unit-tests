@@ -70,38 +70,45 @@ TEST(Stack_DgR2Polygon, creation_DgR2Polygon)
 {
   polygon poly;
 
-  CHECK(poly.Orientation() == Dg::Orientation::Colinear);
+  CHECK(poly.Winding() == Dg::Orientation::Colinear);
 
   poly.PushBack(vec(1.f, 1.f));
-  CHECK(poly.Orientation() == Dg::Orientation::Colinear);
+  CHECK(poly.Winding() == Dg::Orientation::Colinear);
 
   poly.PushBack(vec(1.f, -1.f));
-  CHECK(poly.Orientation() == Dg::Orientation::Colinear);
+  CHECK(poly.Winding() == Dg::Orientation::Colinear);
 
   poly.PushBack(vec(-1.f, -1.f));
-  CHECK(poly.Orientation() == Dg::Orientation::CW);
+  CHECK(poly.Winding() == Dg::Orientation::CW);
 
   poly.PushBack(vec(-1.f, 1.f));
-  CHECK(poly.Orientation() == Dg::Orientation::CW);
+  CHECK(poly.Winding() == Dg::Orientation::CW);
 
   CHECK(poly.Area() == 4.f);
+
+  poly.SetWinding(Dg::Orientation::CCW);
+  CHECK(poly.Winding() == Dg::Orientation::CCW);
 
   poly.Clear();
-  CHECK(poly.Orientation() == Dg::Orientation::Colinear);
+  CHECK(poly.Winding() == Dg::Orientation::Colinear);
 
   poly.PushBack(vec(1.f, 1.f));
-  CHECK(poly.Orientation() == Dg::Orientation::Colinear);
+  CHECK(poly.Winding() == Dg::Orientation::Colinear);
 
   poly.PushBack(vec(-1.f, 1.f));
-  CHECK(poly.Orientation() == Dg::Orientation::Colinear);
+  CHECK(poly.Winding() == Dg::Orientation::Colinear);
 
   poly.PushBack(vec(-1.f, -1.f));
-  CHECK(poly.Orientation() == Dg::Orientation::CCW);
+  CHECK(poly.Winding() == Dg::Orientation::CCW);
 
   poly.PushBack(vec(1.f, -1.f));
-  CHECK(poly.Orientation() == Dg::Orientation::CCW);
+  CHECK(poly.Winding() == Dg::Orientation::CCW);
 
   CHECK(poly.Area() == 4.f);
+
+  poly.SetWinding(Dg::Orientation::CW);
+  CHECK(poly.Winding() == Dg::Orientation::CW);
+
 }
 
 TEST(Stack_DgR2Polygon, query_DgR2PointPolygon)
