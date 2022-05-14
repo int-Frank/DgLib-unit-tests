@@ -375,3 +375,89 @@ TEST(Stack_DgR2SegmentSegment, DgR2Segment)
   CHECK(dcpLSLS_res.cp0 == vec2(4.0, 0.0));
   CHECK(dcpLSLS_res.cp1 == vec2(4.0, 0.0));
 }
+
+TEST(Stack_DgR2SegmentSegment, DgTIR2Segment)
+{
+  seg sa;
+  seg sb;
+  Dg::TI2SegmentSegment<Real> query;
+  Dg::TI2SegmentSegment<Real>::Result result;
+
+  sa.Set(vec2(-1., 0.), vec2(1., 0.));
+
+  //-------------------------------------------------------------------
+  // Not intersecting
+  //-------------------------------------------------------------------
+
+  sb.Set(vec2(0.5, 1.), vec2(0.1, 0.1));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  sb.Set(vec2(1.5, 1.), vec2(1.6, -1.1));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  sb.Set(vec2(-1.5, 1.), vec2(-1.6, -1.1));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  // Parallel
+  sb.Set(vec2(-1., 1.), vec2(1., 1.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  sb.Set(vec2(-10., 1.), vec2(10., 1.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  sb.Set(vec2(10., 1.), vec2(-10., 1.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  sb.Set(vec2(10., -1.), vec2(-10., -1.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  // Coincident
+  sb.Set(vec2(3., 0.), vec2(2., 0.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  sb.Set(vec2(2., 0.), vec2(3., 0.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  sb.Set(vec2(-3., 0.), vec2(-2., 0.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  sb.Set(vec2(-2., 0.), vec2(-3., 0.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  //-------------------------------------------------------------------
+  // Intersecting
+  //-------------------------------------------------------------------
+
+  sb.Set(vec2(0.5, 1.), vec2(0.1, -0.1));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::Intersecting);
+
+  sb.Set(vec2(0.5, -1.), vec2(0.1, 0.1));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::Intersecting);
+
+  // Overlapping
+
+  sb.Set(vec2(-2., 0.), vec2(0.1, 0.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+
+  sb.Set(vec2(-0.1, 0.), vec2(0.1, 0.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+
+  sb.Set(vec2(-0.1, 0.), vec2(2.1, 0.));
+  result = query(sa, sb);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+}
