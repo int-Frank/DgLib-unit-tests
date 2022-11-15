@@ -221,3 +221,54 @@ TEST(Stack_DgR2Polygon, query_DgR2PolygonPolygon)
   result = query(poly_b, poly_a);
   CHECK(result.code == Dg::QueryCode::NotIntersecting);
 }
+
+vec GetCentroid(Dg::Polygon2<float> const &poly)
+{
+  float Cx = 0.0f;
+  float Cy = 0.0f;
+  for (auto it = poly.cEdgesBegin(); it != poly.cEdgesEnd(); it++)
+  {
+    auto seg = *it;
+    vec i = seg.GetP0();
+    vec j = seg.GetP1();
+
+    Cx += (i.x() + j.x()) * (i.x() * j.y() - j.x() * i.y());
+    Cy += (i.y() + j.y()) * (i.x() * j.y() - j.x() * i.y());
+  }
+
+  Cx = Cx / (6.0f * poly.SignedArea());
+  Cy = Cy / (6.0f * poly.SignedArea());
+
+  return vec(Cx, Cy);
+}
+
+TEST(Stack_DgR2Polygon, dummy)
+{
+  // Room 
+  // Centroid: 0.4633495, 0.4633495
+  // Area: 361.667
+ 
+  // Convex Hull
+  // Centroid: 0.4641495, 0.4641495
+  // Area: 96.87519
+
+  Dg::Polygon2<float> room;
+  room.PushBack(vec(-9.379169f, 9.432909f));
+  room.PushBack(vec(-9.379169f, -8.939793f));
+  room.PushBack(vec(10.30587f, -8.939793f));
+  room.PushBack(vec(10.30587f, 9.432909f));
+
+  float roomArea = room.SignedArea();
+  vec roomCentroid = GetCentroid(room);
+
+  Dg::Polygon2<float> points;
+  points.PushBack(vec(5.384612f, -2.706197f));
+  points.PushBack(vec(5.384612f, 7.136323f));
+  points.PushBack(vec(-4.457907f, 7.136323f));
+  points.PushBack(vec(-4.457908f, -2.706196f));
+
+  float pointsArea = points.SignedArea();
+  vec pointsCentroid = GetCentroid(points);
+
+  char t = 0;
+}
