@@ -484,6 +484,11 @@ TEST(Stack_DgFISegmentSegment2_NotIntersecting, DgSegment2)
   s0.Set(vec2(8.0, 11.0), vec2(24.0, 10.0));
   result = query(s0, s1);
   CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  s1.Set(vec2(1.0, 1.0), vec2(2.0, 2.0));
+  s0.Set(vec2(3.0, 3.0), vec2(5.0, 5.0));
+  result = query(s0, s1);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
 }
 
 TEST(Stack_DgFISegmentSegment2_Intersecting, DgSegment2)
@@ -525,6 +530,14 @@ TEST(Stack_DgFISegmentSegment2_Intersecting, DgSegment2)
   CHECK(result.pointResult.point == vec2(10., 10.));
   CHECK(Dg::IsZero(result.pointResult.u1 - 1. / 9.));
   CHECK(Dg::IsZero(result.pointResult.u0 - 0.5));
+
+  s0.Set(vec2(0.0, 0.0), vec2(2.0, 0.0));
+  s1.Set(vec2(1.0, 1.0), vec2(1.0, 0.0));
+  result = query(s0, s1);
+  CHECK(result.code == Dg::QueryCode::Intersecting);
+  CHECK(result.pointResult.point == vec2(1., 0.));
+  CHECK(Dg::IsZero(result.pointResult.u0 - 0.5));
+  CHECK(Dg::IsZero(result.pointResult.u1 - 1.));
 }
 
 TEST(Stack_DgFISegmentSegment2_Overlapping, DgSegment2)
@@ -577,8 +590,51 @@ TEST(Stack_DgFISegmentSegment2_Overlapping, DgSegment2)
   CHECK(Dg::IsZero(result.segmentResult.u0_to_s1 - 2. / 3.));
   CHECK(Dg::IsZero(result.segmentResult.u1_to_s0 - 2. / 3.));
   CHECK(Dg::IsZero(result.segmentResult.u1_to_s1 - 0.));
-}
 
+  s0.Set(vec2(4.0, 4.0), vec2(16.0, 16.0));
+  s1.Set(vec2(8.0, 8.0), vec2(24.0, 24.0));
+  segRes.Set(vec2(8.0, 8.0), vec2(16.0, 16.0));
+  result = query(s0, s1);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+  CHECK(AreEqual(result.segmentResult.segment, segRes));
+  CHECK(Dg::IsZero(result.segmentResult.u0_to_s0 - 1. / 3.));
+  CHECK(Dg::IsZero(result.segmentResult.u0_to_s1 - 1.));
+  CHECK(Dg::IsZero(result.segmentResult.u1_to_s0 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.u1_to_s1 - 0.5));
+
+  s1.Set(vec2(4.0, 4.0), vec2(16.0, 16.0));
+  s0.Set(vec2(8.0, 8.0), vec2(24.0, 24.0));
+  segRes.Set(vec2(8.0, 8.0), vec2(16.0, 16.0));
+  result = query(s0, s1);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+  CHECK(AreEqual(result.segmentResult.segment, segRes));
+  CHECK(Dg::IsZero(result.segmentResult.u0_to_s0 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.u0_to_s1 - 0.5));
+  CHECK(Dg::IsZero(result.segmentResult.u1_to_s0 - 1. / 3.));
+  CHECK(Dg::IsZero(result.segmentResult.u1_to_s1 - 1.));
+
+  s0.Set(vec2(16.0, 16.0), vec2(4.0, 4.0));
+  s1.Set(vec2(8.0, 8.0), vec2(24.0, 24.0));
+  segRes.Set(vec2(16.0, 16.0), vec2(8.0, 8.0));
+  result = query(s0, s1);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+  CHECK(AreEqual(result.segmentResult.segment, segRes));
+  CHECK(Dg::IsZero(result.segmentResult.u0_to_s0 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.u0_to_s1 - 2. / 3.));
+  CHECK(Dg::IsZero(result.segmentResult.u1_to_s0 - 0.5));
+  CHECK(Dg::IsZero(result.segmentResult.u1_to_s1 - 0.));
+
+  s1.Set(vec2(16.0, 16.0), vec2(4.0, 4.0));
+  s0.Set(vec2(8.0, 8.0), vec2(24.0, 24.0));
+  segRes.Set(vec2(8.0, 8.0), vec2(16.0, 16.0));
+  result = query(s0, s1);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+  CHECK(AreEqual(result.segmentResult.segment, segRes));
+  CHECK(Dg::IsZero(result.segmentResult.u0_to_s0 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.u0_to_s1 - 0.5));
+  CHECK(Dg::IsZero(result.segmentResult.u1_to_s0 - 2. / 3.));
+  CHECK(Dg::IsZero(result.segmentResult.u1_to_s1 - 0.));
+}
 
 TEST(Stack_DgTISegmentSegment2_NotIntersecting, DgSegment2)
 {
@@ -595,6 +651,11 @@ TEST(Stack_DgTISegmentSegment2_NotIntersecting, DgSegment2)
 
   s1.Set(vec2(1.0, 1.0), vec2(16.0, 4.0));
   s0.Set(vec2(8.0, 11.0), vec2(24.0, 10.0));
+  result = query(s0, s1);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  s1.Set(vec2(1.0, 1.0), vec2(2.0, 2.0));
+  s0.Set(vec2(3.0, 3.0), vec2(5.0, 5.0));
   result = query(s0, s1);
   CHECK(result.code == Dg::QueryCode::NotIntersecting);
 }
@@ -658,4 +719,97 @@ TEST(Stack_DgTISegmentSegment2_Overlapping, DgSegment2)
   segRes.Set(vec2(8.0, 8.0), vec2(16.0, 16.0));
   result = query(s0, s1);
   CHECK(result.code == Dg::QueryCode::Overlapping);
+}
+
+TEST(Stack_DgFISegmentRay2_NotIntersecting, DgSegment2)
+{
+  seg s;
+  ray r;
+
+  Dg::FI2SegmentRay<Real> query;
+  Dg::FI2SegmentRay<Real>::Result result;
+
+  r.Set(vec2(12., 12.), vec2(-1., -1.));
+  s.Set(vec2(-5., -6.), vec2(5., -10.));
+  result = query(s, r);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+
+  r.Set(vec2(12., 12.), vec2(-1., -1.));
+  s.Set(vec2(14., 14.), vec2(16., 16.));
+  result = query(s, r);
+  CHECK(result.code == Dg::QueryCode::NotIntersecting);
+}
+
+TEST(Stack_DgFISegmentRay2_Intersecting, DgSegment2)
+{
+  seg s;
+  ray r;
+
+  Dg::FI2SegmentRay<Real> query;
+  Dg::FI2SegmentRay<Real>::Result result;
+
+  r.Set(vec2(12., 12.), vec2(-1., -1.));
+  s.Set(vec2(-12., 0.), vec2(-4., -8.));
+  result = query(s, r);
+  CHECK(result.code == Dg::QueryCode::Intersecting);
+  CHECK(result.pointResult.point == vec2(-6., -6.));
+  CHECK(Dg::IsZero(result.pointResult.us - 0.75));
+  CHECK(Dg::IsZero(result.pointResult.ur - sqrt(18. * 18. + 18. * 18.)));
+
+  r.Set(vec2(12., 12.), vec2(-1., -1.));
+  s.Set(vec2(-4., -8.), vec2(-12., 0.));
+  result = query(s, r);
+  CHECK(result.code == Dg::QueryCode::Intersecting);
+  CHECK(result.pointResult.point == vec2(-6., -6.));
+  CHECK(Dg::IsZero(result.pointResult.us - 0.25));
+  CHECK(Dg::IsZero(result.pointResult.ur - sqrt(18. * 18. + 18. * 18.)));
+}
+
+TEST(Stack_DgFISegmentRay2_Overlapping, DgSegment2)
+{
+  seg s, segRes;
+  ray r(vec2(12., 12.), vec2(-1., -1.));
+
+  Dg::FI2SegmentRay<Real> query;
+  Dg::FI2SegmentRay<Real>::Result result;
+
+  s.Set(vec2(-3., -3.), vec2(8., 8.));
+  segRes.Set(vec2(-3., -3.), vec2(8., 8.));
+  result = query(s, r);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+  CHECK(AreEqual(result.segmentResult.segment, segRes));
+  CHECK(Dg::IsZero(result.segmentResult.ur_to_s0 - sqrt(15. * 15. + 15. * 15.)));
+  CHECK(Dg::IsZero(result.segmentResult.ur_to_s1 - sqrt(4. * 4. + 4. * 4.)));
+  CHECK(Dg::IsZero(result.segmentResult.us_to_s0 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.us_to_s1 - 1.));
+
+  s.Set(vec2(8., 8.), vec2(-3., -3.));
+  segRes.Set(vec2(8., 8.), vec2(-3., -3.));
+  result = query(s, r);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+  CHECK(AreEqual(result.segmentResult.segment, segRes));
+  CHECK(Dg::IsZero(result.segmentResult.ur_to_s0 - sqrt(4. * 4. + 4. * 4.)));
+  CHECK(Dg::IsZero(result.segmentResult.ur_to_s1 - sqrt(15. * 15. + 15. * 15.)));
+  CHECK(Dg::IsZero(result.segmentResult.us_to_s0 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.us_to_s1 - 1.));
+
+  s.Set(vec2(20., 20.), vec2(8., 8.));
+  segRes.Set(vec2(12., 12.), vec2(8., 8.));
+  result = query(s, r);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+  CHECK(AreEqual(result.segmentResult.segment, segRes));
+  CHECK(Dg::IsZero(result.segmentResult.ur_to_s0 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.ur_to_s1 - sqrt(4. * 4. + 4. * 4.)));
+  CHECK(Dg::IsZero(result.segmentResult.us_to_s0 - 2. / 3.));
+  CHECK(Dg::IsZero(result.segmentResult.us_to_s1 - 1.));
+
+  s.Set(vec2(8., 8.), vec2(20., 20.));
+  segRes.Set(vec2(8., 8.), vec2(12., 12.));
+  result = query(s, r);
+  CHECK(result.code == Dg::QueryCode::Overlapping);
+  CHECK(AreEqual(result.segmentResult.segment, segRes));
+  CHECK(Dg::IsZero(result.segmentResult.ur_to_s0 - sqrt(4. * 4. + 4. * 4.)));
+  CHECK(Dg::IsZero(result.segmentResult.ur_to_s1 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.us_to_s0 - 0.));
+  CHECK(Dg::IsZero(result.segmentResult.us_to_s1 - 1. / 3.));
 }
