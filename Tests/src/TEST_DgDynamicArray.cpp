@@ -152,3 +152,35 @@ TEST(Stack_dg_DynamicArray_cit, creation_dg_DynamicArray_cit)
 
   CHECK(*(--dgDA.cend()) == 9);
 }
+
+TEST(Stack_Dg_DynamicArray, Dg_DynamicArray_insert)
+{
+  std::vector<int>       lst;
+  Dg::DynamicArray<int>  dglst;
+
+  int i = 0;
+  lst.insert(lst.begin(), i);
+  dglst.insert(0, i++);
+  CHECK(CheckState(lst, dglst));
+
+  lst.insert(lst.begin(), i);
+  dglst.insert(0, i++);
+  CHECK(CheckState(lst, dglst));
+
+  lst.insert(lst.begin() + 2, i);
+  dglst.insert(2, i++);
+  CHECK(CheckState(lst, dglst));
+
+  lst.insert(lst.begin() + 1, i);
+  dglst.insert(1, i++);
+  CHECK(CheckState(lst, dglst));
+
+  lst.insert(lst.begin(), i);
+  dglst.insert(0, i++);
+  CHECK(CheckState(lst, dglst));
+
+  lst.insert(lst.begin() + 2, i);
+  dglst.insert(2, i++);
+  CHECK(CheckState(lst, dglst));
+
+}
