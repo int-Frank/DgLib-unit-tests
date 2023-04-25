@@ -44,7 +44,7 @@ TEST(Stack_dg_AVLTreeMapIterator1, creation_dg_AVLTreeMapIterator1)
   Map map;
   Map const & rmap(map);
   for (int i = 0; i < nItems; i++)
-    map.insert(Dg::Pair(keys[i], 2 * keys[i]));
+    map.insert(keys[i], 2 * keys[i]);
 
   Iter it = map.find(7);
   CHECK(it != map.end());
@@ -62,7 +62,7 @@ TEST(Stack_dg_AVLTreeMapIterator2, creation_dg_AVLTreeMapIterator2)
   Map map;
   Map const & rmap(map);
   for (int i = 0; i < nItems; i++)
-    map.insert(Dg::Pair(keys[i], 2 * keys[i]));
+    map.insert(keys[i], 2 * keys[i]);
 
   Iter it = map.find(7);
   CHECK(it != map.end());
@@ -92,7 +92,7 @@ TEST(Stack_dg_AVLTreeMap, creation_dg_AVLTreeMap)
   //----------------------------------------------------------------------------------------
   for (int i = 0; i < nItems; i++)
   {
-    map.insert(Dg::Pair(keys[i], 2 * keys[i]));
+    map.insert(keys[i], 2 * keys[i]);
   }
 
   for (int i = 0; i < nItems; i++)

@@ -118,10 +118,10 @@ TEST(Stack_DgR2Polygon, query_DgR2PointPolygon)
   Dg::TI2PointPolygon<Real> query;
   Dg::TI2PointPolygon<Real>::Result result;
 
-  poly.PushBack(vec(1.f, 1.f));
-  poly.PushBack(vec(1.f, -1.f));
-  poly.PushBack(vec(-1.f, -1.f));
   poly.PushBack(vec(-1.f, 1.f));
+  poly.PushBack(vec(-1.f, -1.f));
+  poly.PushBack(vec(1.f, -1.f));
+  poly.PushBack(vec(1.f, 1.f));
 
   // Inside
 
@@ -178,6 +178,40 @@ TEST(Stack_DgR2Polygon, query_DgR2PointPolygon)
   CHECK(result.code == Dg::QueryCode::CompletelyOutside);
 
   p = vec(-2.f, 2.f);
+  result = query(p, poly);
+  CHECK(result.code == Dg::QueryCode::CompletelyOutside);
+
+  // Outside, but in line with edges
+
+  p = vec(2.f, -1.f);
+  result = query(p, poly);
+  CHECK(result.code == Dg::QueryCode::CompletelyOutside);
+
+  p = vec(2.f, 1.f);
+  result = query(p, poly);
+  CHECK(result.code == Dg::QueryCode::CompletelyOutside);
+
+  p = vec(1.f, 2.f);
+  result = query(p, poly);
+  CHECK(result.code == Dg::QueryCode::CompletelyOutside);
+
+  p = vec(-1.f, 2.f);
+  result = query(p, poly);
+  CHECK(result.code == Dg::QueryCode::CompletelyOutside);
+
+  p = vec(-2.f, 1.f);
+  result = query(p, poly);
+  CHECK(result.code == Dg::QueryCode::CompletelyOutside);
+
+  p = vec(-2.f, -1.f);
+  result = query(p, poly);
+  CHECK(result.code == Dg::QueryCode::CompletelyOutside);
+
+  p = vec(-1.f, -2.f);
+  result = query(p, poly);
+  CHECK(result.code == Dg::QueryCode::CompletelyOutside);
+
+  p = vec(1.f, -2.f);
   result = query(p, poly);
   CHECK(result.code == Dg::QueryCode::CompletelyOutside);
 }
